@@ -28,9 +28,10 @@
             overflow: hidden;
             position: relative;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             color: var(--light);
+            padding: 0 20px;
         }
         
         .animated-bg {
@@ -88,9 +89,15 @@
             100% { transform: translateY(0) rotate(360deg); }
         }
         
+        .main-container {
+            display: flex;
+            width: 95%;
+            max-width: 1200px;
+            gap: 20px;
+        }
+
         .container {
-            width: 90%;
-            max-width: 450px;
+            width: 450px;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 20px;
@@ -223,6 +230,47 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.2);
         }
         
+        .sidebar {
+            width: 350px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .history-item {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .points-display {
+            font-size: 1.5rem;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .shop-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .buy-btn {
+            background: var(--accent);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
         .footer {
             margin-top: 30px;
             font-size: 0.8rem;
@@ -241,7 +289,8 @@
     </div>
     
     <!-- Main Container -->
-    <div class="container">
+    <div class="main-container">
+        <div class="container">
         <div class="logo-container">
             <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5c713b7d-d9fa-4d48-ae8d-28bf3afc4c72.png" alt="GCash official logo with blue gradient background" class="logo" />
         </div>
@@ -271,6 +320,32 @@
             <button type="submit" class="send-btn">Send Money</button>
         </form>
         
+        </div>
+
+        <div class="sidebar">
+            <h2>Transaction History</h2>
+            <div id="historyList"></div>
+            
+            <div class="points-display">
+                <div>GCash Points</div>
+                <div id="pointsCounter">0</div>
+            </div>
+            
+            <h2>GCash Shop</h2>
+            <div class="shop-item">
+                <span>Premium Sticker Pack</span>
+                <button class="buy-btn" data-cost="50">50 pts</button>
+            </div>
+            <div class="shop-item">
+                <span>Exclusive Badge</span>
+                <button class="buy-btn" data-cost="100">100 pts</button>
+            </div>
+            <div class="shop-item">
+                <span>VIP Status</span>
+                <button class="buy-btn" data-cost="500">500 pts</button>
+            </div>
+        </div>
+
         <div class="footer">
             MADE BY GCASH 2025
         </div>
@@ -326,10 +401,39 @@
                 }, 3000);
             }, 10);
             
+            // Add to history
+            const historyList = document.getElementById('historyList');
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            historyItem.innerHTML = `
+                <span>Sent ₱${amount}</span>
+                <span>+1 pt</span>
+            `;
+            historyList.prepend(historyItem);
+
+            // Update points
+            const pointsCounter = document.getElementById('pointsCounter');
+            pointsCounter.textContent = parseInt(pointsCounter.textContent) + 1;
+
             // Reset form
             document.getElementById('sendMoneyForm').reset();
             amountBtns.forEach(b => b.classList.remove('active'));
             document.querySelector('.amount-btn.active').classList.add('active');
+
+            // Shop functionality
+            document.querySelectorAll('.buy-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const cost = parseInt(this.dataset.cost);
+                    const currentPoints = parseInt(pointsCounter.textContent);
+                    
+                    if(currentPoints >= cost) {
+                        pointsCounter.textContent = currentPoints - cost;
+                        alert('Purchase successful!');
+                    } else {
+                        alert('Not enough points!');
+                    }
+                });
+            });
         });
     </script>
 </body>
