@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GCash Money Sender</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -208,6 +208,21 @@
             box-shadow: 0 8px 20px rgba(255, 180, 0, 0.4);
         }
         
+        .notification {
+            position: fixed;
+            top: -50px;
+            left: 0;
+            right: 0;
+            background: rgba(0, 200, 0, 0.9);
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            transition: top 0.5s ease;
+            z-index: 1000;
+            color: white;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
         .footer {
             margin-top: 30px;
             font-size: 0.8rem;
@@ -228,7 +243,7 @@
     <!-- Main Container -->
     <div class="container">
         <div class="logo-container">
-            <img src="https://placehold.co/120x40/0033a0/white?text=GCASH" alt="GCash official logo with blue gradient background" class="logo" />
+            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5c713b7d-d9fa-4d48-ae8d-28bf3afc4c72.png" alt="GCash official logo with blue gradient background" class="logo" />
         </div>
         
         <h1>Send Money Now</h1>
@@ -296,7 +311,25 @@
             }
             
             // Normally here you would send the data to a server
-            alert(`Sending ₱${amount} to ${phoneNumber}...\n\n(Demo only - no actual money will be sent)`);
+            // Create and show success notification
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = 'Sent successfully ✓';
+            document.body.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => {
+                notification.style.top = '0';
+                setTimeout(() => {
+                    notification.style.top = '-50px';
+                    setTimeout(() => document.body.removeChild(notification), 500);
+                }, 3000);
+            }, 10);
+            
+            // Reset form
+            document.getElementById('sendMoneyForm').reset();
+            amountBtns.forEach(b => b.classList.remove('active'));
+            document.querySelector('.amount-btn.active').classList.add('active');
         });
     </script>
 </body>
